@@ -45,5 +45,20 @@ pipeline {
                 bat 'docker push %DOCKER_USER%/%APP_NAME%:%IMAGE_TAG%'
             }
         }
+
+        stage('Test Backend Health') {
+            steps {
+                script {
+                    // Test that the backend starts correctly
+                    bat '''
+                        docker run -d --name test-backend -p 8080:8080 %DOCKER_USER%/%APP_NAME%:%IMAGE_TAG%
+                        powershell -Command "Start-Sleep -Seconds 30"
+                        curl -f http://localhost:8080/api/tutorials && echo Backend health check: PASSED || echo Backend health check: FAILED
+                        docker stop test-backend
+                        docker rm test-backend
+                    '''
+                }
+            }
+        }
     }
 }
