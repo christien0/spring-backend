@@ -10,11 +10,16 @@ pipeline {
         pollSCM('H/5 * * * *')
     }
 
-
     stages {
         stage('SCM Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/christien0/spring-backend.git'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                bat 'mvn clean package'
             }
         }
 
@@ -26,7 +31,6 @@ pipeline {
 
         stage('Login to Docker Hub') {
             steps {
-                // Securely inject Docker Hub username & token
                 withCredentials([usernamePassword(
                     credentialsId: '0a380709-8b0b-433e-8371-0710dada08be',
                     usernameVariable: 'DOCKER_USER',
