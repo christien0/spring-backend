@@ -7,7 +7,7 @@ pipeline {
         IMAGE_TAG = "latest"
     }
     triggers{
-        pollSCM('H/5 * * * *')
+        pollSCM('H/1 * * * *')
     }
 
     stages {
